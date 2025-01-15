@@ -46,39 +46,26 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-      //   title: Text("AsNews"),
-      //   centerTitle: true,
-      //   actions: [
-      //     IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
-      //   ],
-      //   bottom: TabBar(
-      //     controller: _tabController,
-      //     padding: EdgeInsets.only(left: 20.sp),
-      //     labelPadding: EdgeInsets.symmetric(horizontal: 12.0),
-      //     tabs: tabs,
-      //     isScrollable: true,
-      //   ),
-      // ),
+
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
-            SliverAppBar(
-              pinned: true,
-              floating: true,
-              leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-              title: Text("AsNews"),
-              centerTitle: true,
-              actions: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
-              ],
-              bottom: TabBar(
-                controller: _tabController,
-                padding: EdgeInsets.only(left: 20.sp),
-                labelPadding: EdgeInsets.symmetric(horizontal: 12.0),
-                tabs: tabs,
+            SliverPadding(
+              padding: EdgeInsets.all(0),
+              sliver: SliverAppBar(
+                pinned: true,
+                floating: true,
+                leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                title: Text("AsNews"),
+                centerTitle: true,
+                actions: [
+                  IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+                ],
+                bottom: TabBar(
                 isScrollable: true,
+                  controller: _tabController,
+                  tabs: tabs,
+                ),
               ),
             )
           ];
