@@ -1,25 +1,29 @@
 import 'package:as_news/models/trending_model.dart';
 import 'package:as_news/utils/services/api_services.dart';
 import 'package:flutter/material.dart';
-
 class ApiProvider extends ChangeNotifier {
-  bool _isLoading = true;
-  get isLoading => _isLoading;
- var _trendingNews = [];
-  get trendingNews => _trendingNews;
+  bool _isLoading = false;
+  List<Article> _trendingNews = [];
+  String _error = '';
 
-  notifyListeners();
-  Future getTrending() async {
+  List<Article> get trendingNews => _trendingNews;
+  bool get isLoading => _isLoading;
+  String get error => _error;
+
+  Future<void> getTrending() async {
+    _isLoading = true;
+    _error = '';
+    notifyListeners();
+
     try {
       final response = await DioRequestServices().getTrending();
-      print(response);
       if (response["sucesss"]) {
         _trendingNews = response['data'];
-        print(_trendingNews[0].status);
-        notifyListeners();
+      } else {
+        _error = 'Failed to load trending news.';
       }
     } catch (e) {
-      print(e);
+      _error = 'Error fetching data: $e';
     } finally {
       _isLoading = false;
       notifyListeners();

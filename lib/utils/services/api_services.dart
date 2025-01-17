@@ -57,12 +57,12 @@ class DioRequestServices {
           "https://newsapi.org/v2/top-headlines?country=us&apiKey=$apiKey");
       if (response.statusCode == 200 && response.data != null) {
         final TrendingModel trend = TrendingModel.fromJson(response.data);
-        final List<dynamic> articles = response.data['articles'];
-        print("s $articles");
-      
+        // final List<dynamic> articles = response.data['articles'];
+        // print("s $articles");
+        // print(trend.articles);
 
         return {
-          "data": "Not yet",
+          "data": trend.articles,
           "sucesss": true,
         };
       } else {

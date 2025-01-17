@@ -13,11 +13,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  //  late Future<Map<String, dynamic>> trendingArticles;
   late TabController _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ApiProvider>().getTrending();
+    });
   }
 
   @override
@@ -49,7 +53,21 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final trends = context.watch<ApiProvider>().trendingNews;
-    print(trends[0].articles);
+    final isLoading = context.watch<ApiProvider>().isLoading;
+    final error = context.watch<ApiProvider>().error;
+    if (!isLoading) {
+      if (trends.isNotEmpty) {
+        print(trends[0].author); // Access only if the list is not empty
+      } else {
+        print("No data available.");
+      }
+    }
+    // if (!isLoading) {
+    //   print(trends[0].author);
+    // }
+    // print(trends[0].articles);
+    // print(trendingArticles);
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -81,6 +99,27 @@ class _HomePageState extends State<HomePage>
             Column(
               children: [
                 NewsCategories(category: "Entertainment"),
+                isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : error.isNotEmpty
+                        ? Center(child: Text(error))
+                        : trends.isEmpty
+                            ? Center(child: Text('No data available.'))
+                            : SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                child: ListView.builder(
+                                  itemCount: trends.length,
+                                  itemBuilder: (context, index) {
+                                    final article = trends[index];
+                                    return ListTile(
+                                      title: Text(article.title ?? 'No Title'),
+                                      subtitle: Text(article.description ??
+                                          'No Description'),
+                                    );
+                                  },
+                                ),
+                              ),
               ],
             ),
             NewsCategories(category: "Technology"),
@@ -107,6 +146,7 @@ class NewsCategories extends StatelessWidget {
           InkWell(
             child: Text("Click"),
             onTap: () {
+              // DioRequestServices().getTrending();
               context.read<ApiProvider>().getTrending();
             },
           ),
