@@ -1,11 +1,19 @@
-import 'package:as_news/themes/app_theme.dart';
+import 'package:as_news/utils/api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:as_news/screens/home_page.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:as_news/themes/app_theme.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+Future main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ApiProvider()),
+      ],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +28,7 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
-            theme:AppTheme.darkMode(context),
+            theme: AppTheme.darkMode(context),
             home: HomePage(),
           );
         });

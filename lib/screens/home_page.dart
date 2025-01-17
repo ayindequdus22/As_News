@@ -1,5 +1,8 @@
+import 'package:as_news/utils/api_provider.dart';
+import 'package:as_news/utils/services/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -45,8 +48,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final trends = context.watch<ApiProvider>().trendingNews;
+    print(trends[0].articles);
     return Scaffold(
-
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
@@ -62,7 +66,7 @@ class _HomePageState extends State<HomePage>
                   IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
                 ],
                 bottom: TabBar(
-                isScrollable: true,
+                  isScrollable: true,
                   controller: _tabController,
                   tabs: tabs,
                 ),
@@ -74,7 +78,11 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           children: [
             NewsCategories(category: "For you"),
-            NewsCategories(category: "Entertainment"),
+            Column(
+              children: [
+                NewsCategories(category: "Entertainment"),
+              ],
+            ),
             NewsCategories(category: "Technology"),
             NewsCategories(category: "Health"),
             NewsCategories(category: "Education"),
@@ -94,7 +102,17 @@ class NewsCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(category),
+      child: Column(
+        children: [
+          InkWell(
+            child: Text("Click"),
+            onTap: () {
+              context.read<ApiProvider>().getTrending();
+            },
+          ),
+          Text(category),
+        ],
+      ),
     );
   }
 }
