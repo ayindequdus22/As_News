@@ -1,5 +1,5 @@
 import 'package:as_news/utils/api_provider.dart';
-import 'package:as_news/utils/services/api_services.dart';
+import 'package:as_news/widgets/trending.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +19,6 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ApiProvider>().getTrending();
-    });
   }
 
   @override
@@ -52,16 +49,16 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final trends = context.watch<ApiProvider>().trendingNews;
-    final isLoading = context.watch<ApiProvider>().isLoading;
-    final error = context.watch<ApiProvider>().error;
-    if (!isLoading) {
-      if (trends.isNotEmpty) {
-        print(trends[0].author); // Access only if the list is not empty
-      } else {
-        print("No data available.");
-      }
-    }
+    // final trends = context.watch<ApiProvider>().trendingNews;
+    // final isLoading = context.watch<ApiProvider>().isLoading;
+    // final error = context.watch<ApiProvider>().error;
+    // if (!isLoading) {
+    //   if (trends.isNotEmpty) {
+    //     print(trends[0].author); // Access only if the list is not empty
+    //   } else {
+    //     print("No data available.");
+    //   }
+    // }
     // if (!isLoading) {
     //   print(trends[0].author);
     // }
@@ -96,32 +93,7 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           children: [
             NewsCategories(category: "For you"),
-            Column(
-              children: [
-                NewsCategories(category: "Entertainment"),
-                isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : error.isNotEmpty
-                        ? Center(child: Text(error))
-                        : trends.isEmpty
-                            ? Center(child: Text('No data available.'))
-                            : SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.8,
-                                child: ListView.builder(
-                                  itemCount: trends.length,
-                                  itemBuilder: (context, index) {
-                                    final article = trends[index];
-                                    return ListTile(
-                                      title: Text(article.title ?? 'No Title'),
-                                      subtitle: Text(article.description ??
-                                          'No Description'),
-                                    );
-                                  },
-                                ),
-                              ),
-              ],
-            ),
+            Trending(),
             NewsCategories(category: "Technology"),
             NewsCategories(category: "Health"),
             NewsCategories(category: "Education"),

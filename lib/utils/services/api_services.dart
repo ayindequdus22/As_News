@@ -1,12 +1,8 @@
+import 'dart:developer';
+
 import 'package:as_news/models/trending_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import "package:dio"
-// import 'dart:convert';
-
-// import 'package:as_news/models/trending_model.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-//
 
 // class GetTrendingService {
 //   static final apiKey = dotenv.env['NEWS_API_KEY'];
@@ -31,30 +27,46 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 //     }
 //   }
 
-// //   Future<List<Post>> fetchPosts() async {
-// //   final url = Uri.parse('https://jsonplaceholder.typicode.com/posts');
-
-// //   try {
-// //     final response = await http.get(url);
-
-// //     if (response.statusCode == 200) {
-// //       final List<dynamic> data = json.decode(response.body);
-// //       return data.map((post) => Post.fromJson(post)).toList();
-// //     } else {
-// //       throw Exception('Failed to load posts. Status code: ${response.statusCode}');
-// //     }
-// //   } catch (e) {
-// //     throw Exception('Error occurred: $e');
-// //   }
-// // }
-// }
-
 class DioRequestServices {
   static final apiKey = dotenv.env['NEWS_API_KEY'];
+  final Dio dio = Dio(
+    BaseOptions(
+      baseUrl: "https://newsapi.org/v2",
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {Headers.contentTypeHeader: "application/json"},
+    ),
+  );
+  DioRequestServices() {
+    dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+      // ignore: unnecessary_brace_in_string_interps
+      log("Sending Request to: ${options} ");
+      return handler.next(options);
+    }, onResponse: (Response response, ResponseInterceptorHandler handler) {
+      log("Received response: ${response.statusCode}");
+      return handler.next(response);
+    }, onError:
+            (DioException exception, ErrorInterceptorHandler handler) async {
+      int retryCount = 0;
+      int maximumRetries = 3;
+      while (retryCount < maximumRetries &&
+          exception.type == DioExceptionType.connectionTimeout) {
+        retryCount++;
+        try {
+          log("Connection timeout,retrying $retryCount");
+          final res = await dio.request(exception.requestOptions.path);
+          return handler.resolve(res);
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+    }));
+  }
   Future<Map<String, dynamic>> getTrending() async {
     try {
-      Response response = await Dio().get(
-          "https://newsapi.org/v2/top-headlines?country=us&apiKey=$apiKey");
+      Response response = await dio.get(
+          "/top-headlines?country=us&apiKey=$apiKey");
       if (response.statusCode == 200 && response.data != null) {
         final TrendingModel trend = TrendingModel.fromJson(response.data);
         // final List<dynamic> articles = response.data['articles'];
@@ -71,7 +83,7 @@ class DioRequestServices {
           "sucesss": false,
         };
       }
-    } catch (e) {
+    } on DioException catch (e) {
       throw Exception(e);
     }
   }

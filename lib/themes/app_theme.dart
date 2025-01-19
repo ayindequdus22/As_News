@@ -7,7 +7,7 @@ class AppTheme {
   const AppTheme();
   static ThemeData _buildTheme(
       ColorScheme colorScheme, BuildContext context, TextTheme textTheme) {
-    final themeContext = Theme.of(context);
+    // final themeContext = Theme.of(context);
 
     return ThemeData(
         useMaterial3: true,
