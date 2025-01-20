@@ -32,8 +32,8 @@ class DioRequestServices {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: "https://newsapi.org/v2",
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 60), /// remember to set this back to 5 and to other to 10
+      receiveTimeout: const Duration(seconds: 60),
       headers: {Headers.contentTypeHeader: "application/json"},
     ),
   );
@@ -58,7 +58,7 @@ class DioRequestServices {
           final res = await dio.request(exception.requestOptions.path);
           return handler.resolve(res);
         } catch (e) {
-          print(e.toString());
+          log(e.toString());
         }
       }
     }));

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
+   await ScreenUtil.ensureScreenSize();
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ApiProvider()),

@@ -1,5 +1,5 @@
 import 'package:as_news/utils/api_provider.dart';
-import 'package:as_news/widgets/trending.dart';
+import 'package:as_news/widgets/for_you.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -92,8 +92,8 @@ class _HomePageState extends State<HomePage>
         body: TabBarView(
           controller: _tabController,
           children: [
-            NewsCategories(category: "For you"),
-            Trending(),
+            ForYou(),
+            NewsCategories(category: "Entertainment"),
             NewsCategories(category: "Technology"),
             NewsCategories(category: "Health"),
             NewsCategories(category: "Education"),
