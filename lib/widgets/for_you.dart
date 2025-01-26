@@ -64,20 +64,23 @@ class _ForYouState extends State<ForYou> {
                                 // );
                                 return Column(
                                   children: [
-  //                                   Image.network(loadingBuilder: (context, child, progress) {
-  //   if (progress == null) return child;
-  //   return CircularProgressIndicator();
-  // },
-  // errorBuilder: (context, error, stackTrace) {
-  //   print("Error: $error"); // Log the error
-  //   return Icon(Icons.broken_image); // Show fallback UI
-  // },
-  //                                       trends[index].urlToImage.toString(),)
-                            CachedNetworkImage(
-  imageUrl: "https://example.com/news-image.jpg",
-  placeholder: (context, url) => CircularProgressIndicator(),
-  errorWidget: (context, url, error) => Icon(Icons.error),
-)
+                                    //                                   Image.network(loadingBuilder: (context, child, progress) {
+                                    //   if (progress == null) return child;
+                                    //   return CircularProgressIndicator();
+                                    // },
+                                    // errorBuilder: (context, error, stackTrace) {
+                                    //   print("Error: $error"); // Log the error
+                                    //   return Icon(Icons.broken_image); // Show fallback UI
+                                    // },
+                                    //                                       trends[index].urlToImage.toString(),)
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          "https://example.com/news-image.jpg",
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    )
                                   ],
                                 );
                               },
