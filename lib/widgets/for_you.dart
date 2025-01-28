@@ -1,12 +1,11 @@
 import 'dart:developer';
-
-import 'package:as_news/utils/api_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import 'package:as_news/utils/api_provider.dart';
 class ForYou extends StatefulWidget {
   const ForYou({super.key});
 

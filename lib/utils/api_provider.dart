@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:as_news/models/trending_model.dart';
 import 'package:as_news/utils/services/api_services.dart';
-import 'package:flutter/material.dart';
 class ApiProvider extends ChangeNotifier {
   bool _isLoading = false;
   List<Article> _trendingNews = [];

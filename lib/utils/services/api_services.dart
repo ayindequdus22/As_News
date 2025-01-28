@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:as_news/models/trending_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:as_news/models/trending_model.dart';
 
 // class GetTrendingService {
 //   static final apiKey = dotenv.env['NEWS_API_KEY'];
@@ -32,8 +32,10 @@ class DioRequestServices {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: "https://newsapi.org/v2",
-      connectTimeout: const Duration(seconds: 60), /// remember to set this back to 5 and to other to 10
-      receiveTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 5),
+
+      /// remember to set this back to 5 and to other to 10
+      receiveTimeout: const Duration(seconds: 10),
       headers: {Headers.contentTypeHeader: "application/json"},
     ),
   );
@@ -60,13 +62,14 @@ class DioRequestServices {
         } catch (e) {
           log(e.toString());
         }
+        return handler.next(exception);
       }
     }));
   }
   Future<Map<String, dynamic>> getTrending() async {
     try {
-      Response response = await dio.get(
-          "/top-headlines?country=us&apiKey=$apiKey");
+      Response response =
+          await dio.get("/top-headlines?country=us&apiKey=$apiKey");
       if (response.statusCode == 200 && response.data != null) {
         final TrendingModel trend = TrendingModel.fromJson(response.data);
         // final List<dynamic> articles = response.data['articles'];
