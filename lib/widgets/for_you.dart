@@ -53,7 +53,7 @@ class _ForYouState extends State<ForYou> {
                         // scrollDirection: Axis.horizontal,
                         // itemExtent: ScreenUtil().screenHeight,
                         options: CarouselOptions(
-                          height: 180.h,
+                          height: 400.h,
                           pageSnapping: true,
                           viewportFraction: 1.0,
                           enableInfiniteScroll: true,
@@ -68,14 +68,21 @@ class _ForYouState extends State<ForYou> {
                                 // width: ScreenUtil().screenWidth,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20.r)),
-                                child: CachedNetworkImage(
-                                  imageUrl: trend.urlToImage.toString(),
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                child: Column(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: trend.urlToImage.toString(),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                    Text(trend.title.toString()),
+                                    Text(trend.content.toString()),
+                                    Text(trend.source!.name.toString())
+                                  ],
                                 ),
                               );
                             },
