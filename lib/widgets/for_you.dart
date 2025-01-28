@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class ForYou extends StatefulWidget {
   const ForYou({super.key});
@@ -37,6 +38,8 @@ class _ForYouState extends State<ForYou> {
       }
     }
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // NewsCategories(category: "Entertainment"),
         Text("For you"),
@@ -46,47 +49,38 @@ class _ForYouState extends State<ForYou> {
                 ? Center(child: Text(error))
                 : trends.isEmpty //or if it's empty show no data available
                     ? Center(child: Text('No data available.')) // show data
-                    : SizedBox(
-                        height: 400.h,
-                        child: CarouselView(
-                          scrollDirection: Axis.horizontal,
-                          itemExtent: 200.w,
-                          children: [
-                            ListView.builder(
-                              itemCount: trends.length,
-                              itemBuilder: (context, index) {
-                                //     // final article = trends[index];
-                                //     // return ListTile(
-                                //     //   title: Text(article.title ?? 'No Title'),
-                                //     //   subtitle:
-                                //     //       Text(article.description ?? 'No Description'),
-
-                                // );
-                                return Column(
-                                  children: [
-                                    //                                   Image.network(loadingBuilder: (context, child, progress) {
-                                    //   if (progress == null) return child;
-                                    //   return CircularProgressIndicator();
-                                    // },
-                                    // errorBuilder: (context, error, stackTrace) {
-                                    //   print("Error: $error"); // Log the error
-                                    //   return Icon(Icons.broken_image); // Show fallback UI
-                                    // },
-                                    //                                       trends[index].urlToImage.toString(),)
-                                    CachedNetworkImage(
-                                      imageUrl:
-                                          "https://example.com/news-image.jpg",
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
+                    : CarouselSlider(
+                        // scrollDirection: Axis.horizontal,
+                        // itemExtent: ScreenUtil().screenHeight,
+                        options: CarouselOptions(
+                          height: 180.h,
+                          pageSnapping: true,
+                          viewportFraction: 1.0,
+                          enableInfiniteScroll: true,
                         ),
+                        items: trends.map((trend) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                clipBehavior: Clip.hardEdge,
+                                margin: EdgeInsets.symmetric(horizontal: 10.w),
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                // width: ScreenUtil().screenWidth,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.r)),
+                                child: CachedNetworkImage(
+                                  imageUrl: trend.urlToImage.toString(),
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  placeholder: (context, url) => Center(
+                                      child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                       ),
       ],
     );
